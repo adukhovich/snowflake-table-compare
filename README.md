@@ -29,6 +29,12 @@ You need Python 3 and the Snowflake connector installed:
 pip install snowflake-connector-python
 ```
 
+If you want to use the Jupyter notebook version, also install Jupyter:
+
+```bash
+pip install notebook
+```
+
 ### 2. Create Your Config File  
 Make a copy of `example_config.json` and name it `config.json`:
 
