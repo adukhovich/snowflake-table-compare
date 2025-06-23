@@ -1,0 +1,5 @@
+{
+  "account": "YOUR_SNOWFLAKE_ACCOUNT",
+  "user": "YOUR_SNOWFLAKE_USER",
+  "warehouse": "YOUR_SNOWFLAKE_WARESHOUSE"
+}
