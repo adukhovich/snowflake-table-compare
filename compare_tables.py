@@ -88,11 +88,13 @@ def compare_tables():
                 if counts_1[col] != counts_2[col]:
                     mismatches.append((col, counts_1[col], counts_2[col]))
 
-            for col, c1, c2 in mismatches:
-                logger.log(f"⚠️  Column '{col}': {TABLE_1} has {c1}, {TABLE_2} has {c2}")
-
-            num_ok = len(common) - len(mismatches)
-            logger.log(f"\n✅ Remaining {num_ok} columns have matching distinct counts.\n")
+            if mismatches:
+                for col, c1, c2 in mismatches:
+                    logger.log(f"⚠️  Column '{col}': {TABLE_1} has {c1}, {TABLE_2} has {c2}")
+                num_ok = len(common) - len(mismatches)
+                logger.log(f"\n✅ Remaining {num_ok} columns have matching distinct counts.\n")
+            else:
+                logger.log("\n✅ All common columns have matching distinct counts.\n")
             logger.log(f"📝 Log saved to {log_path}")
 
     logger.close()
