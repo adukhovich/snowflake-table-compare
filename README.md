@@ -48,13 +48,15 @@ Replace the values with your actual Snowflake credentials.
 
 ### 🐍 Option 1: Run Python Script
 
+Before running, update the table names (`TABLE_1` and `TABLE_2`) and, if needed, the `EXCLUDED_COLUMNS` list in `compare_tables.py` or `compare_tables.ipynb` to match your use case.
+
 ```bash
 python compare_tables.py
 ```
 
 ### 📓 Option 2: Use Jupyter Notebook
 
-Open `compare_tables.ipynb` and run the cells interactively.
+Open `compare_tables.ipynb`, update the table names and excluded columns as needed, and run the cells interactively.
 
 ---
 
