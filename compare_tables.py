@@ -4,8 +4,8 @@ from typing import List
 from datetime import datetime
 
 # CONFIG
-TABLE_1 = "_CLONE_DATAOPS_PENG_8343_SNOWPIPE_RAW.SCOTTS_PIPE.SCOTTS"
-TABLE_2 = "FIVETRAN_RAW.SCOTTS.SCOTTS"
+TABLE_1 = "DB1.SCHEMA1.TABLE1"
+TABLE_2 = "DB2.SCHEMA2.TABLE2"
 
 # Optional WHERE clauses to filter each table (or leave as "")
 WHERE_1 = ""  # e.g., "WHERE _file = 'abc_2023-10-01.csv"
