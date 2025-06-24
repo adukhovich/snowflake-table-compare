@@ -4,8 +4,8 @@ from typing import List
 from datetime import datetime
 
 # CONFIG
-TABLE_1 = "DB1.SCHEMA1.TABLE1"
-TABLE_2 = "DB2.SCHEMA2.TABLE2"
+TABLE_1 = "_CLONE_DATAOPS_PENG_8343_SNOWPIPE_RAW.SCOTTS_PIPE.SCOTTS"
+TABLE_2 = "FIVETRAN_RAW.SCOTTS.SCOTTS"
 
 # Optional WHERE clauses to filter each table (or leave as "")
 WHERE_1 = ""  # e.g., "WHERE _file = 'abc_2023-10-01.csv"
@@ -87,7 +87,8 @@ def compare_tables():
             set_1, set_2 = set(cols_1), set(cols_2)
             only_in_1 = sorted(set_1 - set_2)
             only_in_2 = sorted(set_2 - set_1)
-            common = sorted(set_1 & set_2)
+            # Preserve ordinal position from TABLE_1
+            common = [col for col in cols_1 if col in set_2]
 
             logger.log(f"📌 Columns only in {TABLE_1}: {only_in_1 or 'None'}")
             logger.log(f"📌 Columns only in {TABLE_2}: {only_in_2 or 'None'}\n")
