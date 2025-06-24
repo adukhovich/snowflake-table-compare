@@ -62,6 +62,24 @@ def compare_tables():
 
     with connect_to_snowflake(config) as conn:
         with conn.cursor() as cursor:
+
+            logger.log(f"\n🔍 Comparing tables:")
+            logger.log(f"    • Table 1: {TABLE_1}")
+            logger.log(f"    • Table 2: {TABLE_2}\n")
+
+            # Row count check
+            cursor.execute(f"SELECT COUNT(*) FROM {TABLE_1}")
+            row_count_1 = cursor.fetchone()[0]
+            cursor.execute(f"SELECT COUNT(*) FROM {TABLE_2}")
+            row_count_2 = cursor.fetchone()[0]
+            logger.log(f"🔢 Row count in {TABLE_1}: {row_count_1}")
+            logger.log(f"🔢 Row count in {TABLE_2}: {row_count_2}")
+            if row_count_1 != row_count_2:
+                logger.log("❌ Tables do NOT have the same number of rows.\n")
+            else:
+                logger.log("✅ Both tables have the same number of rows.\n")
+
+            # Column names comparison across two tables
             cols_1 = get_columns(cursor, TABLE_1, EXCLUDED_COLUMNS)
             cols_2 = get_columns(cursor, TABLE_2, EXCLUDED_COLUMNS)
 
@@ -72,13 +90,10 @@ def compare_tables():
             only_in_2 = sorted(set_2 - set_1)
             common = sorted(set_1 & set_2)
 
-            logger.log(f"\n🔍 Comparing tables:")
-            logger.log(f"    • Table 1: {TABLE_1}")
-            logger.log(f"    • Table 2: {TABLE_2}\n")
-
             logger.log(f"📌 Columns only in {TABLE_1}: {only_in_1 or 'None'}")
             logger.log(f"📌 Columns only in {TABLE_2}: {only_in_2 or 'None'}\n")
 
+            # Distinct value comparison across two tables
             logger.log(f"📊 Distinct value comparison for {len(common)} common columns:\n")
             counts_1 = get_distinct_counts(cursor, TABLE_1, common)
             counts_2 = get_distinct_counts(cursor, TABLE_2, common)

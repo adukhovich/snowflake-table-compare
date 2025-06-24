@@ -2,6 +2,7 @@
 
 This repository helps you compare two Snowflake tables by:
 
+- Comparing the **row counts** of both tables
 - Checking for column mismatches (present in one table but not the other)
 - Comparing the **count of distinct values** for columns present in both tables
 - Logging all results to a timestamped log file
@@ -16,6 +17,7 @@ This repository helps you compare two Snowflake tables by:
 | `compare_tables.py` | Command-line script to compare two tables |
 | `compare_tables.ipynb` | Jupyter notebook version for interactive exploration |
 | `example_config.json` | Sample configuration file for Snowflake connection |
+| `requirements.txt` | List of required Python packages |
 
 ---
 
@@ -23,7 +25,13 @@ This repository helps you compare two Snowflake tables by:
 
 ### 1. Install Dependencies
 
-You need Python 3 and the Snowflake connector installed:
+You need Python 3. You can install all required dependencies using:
+
+```bash
+pip install -r requirements.txt
+```
+
+Or, install just the Snowflake connector:
 
 ```bash
 pip install snowflake-connector-python
@@ -76,6 +84,7 @@ compare_log_2025-06-23_14-30-00.txt
 
 It includes:
 
+- Row count comparison
 - Column mismatches
 - Distinct value differences
 - Summary of matching columns
