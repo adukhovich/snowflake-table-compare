@@ -4,7 +4,7 @@ This repository helps you compare two Snowflake tables by:
 
 - Comparing the **row counts** of both tables
 - Checking for column mismatches (present in one table but not the other)
-- Comparing the **count of distinct values** for columns present in both tables
+- Comparing the **distinct values** and **their counts** for every column present in both tables
 - Logging all results to a timestamped log file
 - Works with Snowflake **SSO (external browser)** authentication
 
@@ -12,12 +12,12 @@ This repository helps you compare two Snowflake tables by:
 
 ## 🧱 Files
 
-| File | Description |
-|------|-------------|
-| `compare_tables.py` | Command-line script to compare two tables |
+| File                | Description                                         |
+|---------------------|-----------------------------------------------------|
+| `compare_tables.py` | Command-line script to compare two tables           |
 | `compare_tables.ipynb` | Jupyter notebook version for interactive exploration |
 | `example_config.json` | Sample configuration file for Snowflake connection |
-| `requirements.txt` | List of required Python packages |
+| `requirements.txt`  | List of required Python packages                    |
 
 ---
 
