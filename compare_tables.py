@@ -5,8 +5,8 @@ from datetime import datetime
 
 # CONFIG
 CONFIG_PATH = 'config.json'
-TABLE_1 = "DB1.SCHEMA1.TABLE1"
-TABLE_2 = "DB2.SCHEMA2.TABLE2"
+TABLE_1 = "FIVETRAN_RAW.SCOTTS.SCOTTS"
+TABLE_2 = "_CLONE_DATAOPS_PENG_8343_SNOWPIPE_RAW.SCOTTS_PIPE.SCOTTS"
 EXCLUDED_COLUMNS = ['METADATA_FILENAME', 'METADATA_FILE_ROW_NUMBER', '_DBT_COPIED_AT', '_FILE', '_FIVETRAN_SYNCED', '_LINE', '_MODIFIED']
 
 # Generate log file path with timestamp
@@ -53,6 +53,12 @@ def get_distinct_counts(cursor, table_name: str, columns: List[str]) -> dict:
         cursor.execute(query)
         counts[col] = cursor.fetchone()[0]
     return counts
+
+# Get count of records for each distinct value in a column
+def get_value_counts(cursor, table_name: str, column: str) -> dict:
+    query = f'SELECT "{column}", COUNT(*) FROM {table_name} GROUP BY "{column}"'
+    cursor.execute(query)
+    return {row[0]: row[1] for row in cursor.fetchall()}
 
 # Main comparison logic
 def compare_tables():
@@ -110,7 +116,38 @@ def compare_tables():
                 logger.log(f"\n✅ Remaining {num_ok} columns have matching distinct counts.\n")
             else:
                 logger.log("\n✅ All common columns have matching distinct counts.\n")
-            logger.log(f"📝 Log saved to {log_path}")
+
+            # Value-level comparison for all common columns
+            logger.log("\n🔬 Value-level comparison for all common columns:")
+            for col in common:
+                value_counts_1 = get_value_counts(cursor, TABLE_1, col)
+                value_counts_2 = get_value_counts(cursor, TABLE_2, col)
+
+                values_1 = set(value_counts_1.keys())
+                values_2 = set(value_counts_2.keys())
+
+                missing_in_2 = values_1 - values_2
+                missing_in_1 = values_2 - values_1
+
+                if missing_in_2:
+                    logger.log(f"⚠️  Values in {TABLE_1}.{col} but not in {TABLE_2}: {sorted(missing_in_2)}")
+                if missing_in_1:
+                    logger.log(f"⚠️  Values in {TABLE_2}.{col} but not in {TABLE_1}: {sorted(missing_in_1)}")
+
+                # Compare counts for shared values
+                shared = values_1 & values_2
+                count_mismatches = []
+                for v in shared:
+                    if value_counts_1[v] != value_counts_2[v]:
+                        count_mismatches.append((v, value_counts_1[v], value_counts_2[v]))
+                if count_mismatches:
+                    logger.log(f"⚠️  Count mismatches for column '{col}':")
+                    for v, c1, c2 in count_mismatches:
+                        logger.log(f"    Value '{v}': {TABLE_1} has {c1}, {TABLE_2} has {c2}")
+                if not missing_in_2 and not missing_in_1 and not count_mismatches:
+                    logger.log(f"✅ All values and counts match for column '{col}'.")
+
+            logger.log(f"\n📝 Log saved to {log_path}")
 
     logger.close()
 
