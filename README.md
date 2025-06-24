@@ -2,9 +2,9 @@
 
 This repository helps you compare two Snowflake tables by:
 
-- Comparing the **row counts** of both tables
+- Comparing the **row counts** of both tables (optionally filtered with a `WHERE` clause)
 - Checking for column mismatches (present in one table but not the other)
-- Comparing the **distinct values** and **their counts** for every column present in both tables
+- Comparing the **distinct values** and **their counts** for every column present in both tables (optionally filtered with a `WHERE` clause)
 - Logging all results to a timestamped log file
 - Works with Snowflake **SSO (external browser)** authentication
 
@@ -64,6 +64,8 @@ Replace the values with your actual Snowflake credentials.
 
 Before running, update the table names (`TABLE_1` and `TABLE_2`) and, if needed, the `EXCLUDED_COLUMNS` list in `compare_tables.py` or `compare_tables.ipynb` to match your use case.
 
+You can use the `WHERE_1` and `WHERE_2` variables to filter rows for each table if necessary.
+
 ```bash
 python compare_tables.py
 ```
@@ -84,7 +86,7 @@ compare_log_2025-06-23_14-30-00.txt
 
 It includes:
 
-- Row count comparison
+- Row count comparison (with any applied WHERE clause)
 - Column mismatches
 - Distinct value differences
 - Summary of matching columns
