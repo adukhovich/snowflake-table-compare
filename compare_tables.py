@@ -87,7 +87,8 @@ def compare_tables():
             set_1, set_2 = set(cols_1), set(cols_2)
             only_in_1 = sorted(set_1 - set_2)
             only_in_2 = sorted(set_2 - set_1)
-            common = sorted(set_1 & set_2)
+            # Preserve ordinal position from TABLE_1
+            common = [col for col in cols_1 if col in set_2]
 
             logger.log(f"📌 Columns only in {TABLE_1}: {only_in_1 or 'None'}")
             logger.log(f"📌 Columns only in {TABLE_2}: {only_in_2 or 'None'}\n")
