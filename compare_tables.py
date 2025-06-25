@@ -14,6 +14,9 @@ WHERE_2 = ""
 EXCLUDED_COLUMNS = ['METADATA_FILENAME', 'METADATA_FILE_ROW_NUMBER', '_DBT_COPIED_AT', '_FILE', '_FIVETRAN_SYNCED', '_LINE', '_MODIFIED']
 CONFIG_PATH = 'config.json'
 
+# Maximum number of value mismatches to display per column
+MAX_MISMATCH_DISPLAY = 10
+
 class Logger:
     def __init__(self, filepath):
         self.filepath = filepath
@@ -106,9 +109,13 @@ def compare_tables():
                 missing_in_1 = sorted(keys_2 - keys_1)
 
                 if missing_in_2:
-                    logger.log(f"⚠️  Values in {TABLE_1}.{col} but not in {TABLE_2}: {missing_in_2}")
+                    shown = missing_in_2[:MAX_MISMATCH_DISPLAY]
+                    logger.log(f"⚠️  Values in {TABLE_1}.{col} but not in {TABLE_2}: {shown}" +
+                               (f" ...and {len(missing_in_2) - MAX_MISMATCH_DISPLAY} more" if len(missing_in_2) > MAX_MISMATCH_DISPLAY else ""))
                 if missing_in_1:
-                    logger.log(f"⚠️  Values in {TABLE_2}.{col} but not in {TABLE_1}: {missing_in_1}")
+                    shown = missing_in_1[:MAX_MISMATCH_DISPLAY]
+                    logger.log(f"⚠️  Values in {TABLE_2}.{col} but not in {TABLE_1}: {shown}" +
+                               (f" ...and {len(missing_in_1) - MAX_MISMATCH_DISPLAY} more" if len(missing_in_1) > MAX_MISMATCH_DISPLAY else ""))
 
                 shared = keys_1 & keys_2
                 count_mismatches = [(v, value_counts_1[v], value_counts_2[v])
